@@ -14,7 +14,7 @@ random.seed(seed)
 torch.backends.cudnn.deterministic = True
 
 from approaches import CSAR
-from CSAR_model.model import BertClassifier_PALS,BertClassifier_CSAR,BertClassifier_base,BertClassifier_UCL,BertClassifier_CSAR_frezzbert,LSTMSentiment,CNN_Text
+from CSAR_model.model import BertClassifier_CSAR,BertClassifier_base
 from dataset import bert_train_loader
 
 from transformers import get_linear_schedule_with_warmup,AdamW
@@ -33,23 +33,6 @@ if args.approach == 'BERT':
 elif args.approach == 'CSAR':
     model = BertClassifier_CSAR()
     regular = True
-elif args.approach == 'PALS':
-    model = BertClassifier_PALS()
-elif args.approach == 'UCL': 
-    model = BertClassifier_UCL()
-    regular = True
-elif args.approach == 'FreezeBert':
-    model = BertClassifier_CSAR_frezzbert()
-elif args.approach == 'LSTM':
-    model = LSTMSentiment(768,256,30522,True,16)
-    lr = 1e-3
-    epochs = 5
-    batch_size = 16
-elif args.approach == 'CNN_Text':
-    model = CNN_Text()
-    lr = 1e-3
-    epochs = 5
-    batch_size = 16
 
 print("trainning :"+args.approach)
 
