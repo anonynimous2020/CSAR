@@ -362,9 +362,9 @@ class BertAttention(nn.Module):
         outputs = (attention_output,) + self_outputs[1:]  # add attentions if we output them
         return outputs
 
-class BERTPals(nn.Module):
+class BERTPRAM(nn.Module):
     def __init__(self, config, extra_dim=None):
-        super(BERTPals, self).__init__()
+        super(BERTPRAM, self).__init__()
         # Encoder and decoder matrices project down to the smaller dimension
         self.aug_dense = nn.Linear(config.hidden_size, config.hidden_size_aug)
         self.aug_dense2 = nn.Linear(config.hidden_size_aug, config.hidden_size)
@@ -437,19 +437,19 @@ class BertLayer(nn.Module):
         self.mult = mult
         if self.mult:
             self.datasets , self.multi_layers = [], nn.ModuleList()
-            self.mult_pals = BERTPals(config)    
-            self.PALs_layer = None
+            self.mult_PRAM = BERTPRAM(config)    
+            self.PRAM_layer = None
 
     def add_dataset(self, dataset):
         """Adds a new dataset to the classifier."""
         if dataset not in self.datasets:
             self.datasets.append(dataset)
-            self.multi_layers.append(copy.deepcopy(self.mult_pals))
+            self.multi_layers.append(copy.deepcopy(self.mult_PRAM))
 
     def set_dataset(self, dataset):
         """Change the active classifier."""
         assert dataset in self.datasets
-        self.PALs_layer = self.multi_layers[self.datasets.index(dataset)]
+        self.PRAM_layer = self.multi_layers[self.datasets.index(dataset)]
 
     def forward(
         self,
@@ -481,7 +481,7 @@ class BertLayer(nn.Module):
 
         intermediate_output = self.intermediate(attention_output,sample)
         if self.mult:
-            extra = self.PALs_layer(hidden_states, attention_mask)
+            extra = self.PRAM_layer(hidden_states, attention_mask)
             layer_output = self.output(intermediate_output, attention_output + extra,sample)
         else:
             layer_output = self.output(intermediate_output, attention_output,sample)
@@ -525,8 +525,8 @@ class BertEncoder(nn.Module):
         assert dataset in self.datasets
         for l, layer in enumerate(self.layer):
             layer.set_dataset(dataset)
-            layer.PALs_layer.aug_dense = self.mult_aug_dense[self.datasets.index(dataset)]
-            layer.PALs_layer.aug_dense2 = self.mult_aug_dense2[self.datasets.index(dataset)]
+            layer.PRAM_layer.aug_dense = self.mult_aug_dense[self.datasets.index(dataset)]
+            layer.PRAM_layer.aug_dense2 = self.mult_aug_dense2[self.datasets.index(dataset)]
 
 
     def forward(
