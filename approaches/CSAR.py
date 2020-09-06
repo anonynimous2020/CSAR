@@ -16,7 +16,7 @@ from arguments import get_args
 
 args = get_args()
 
-from bayes_layer import BayesianLinear, BayesianConv2D, _calculate_fan_in_and_fan_out
+from bayes_layer import BayesianLinear,  _calculate_fan_in_and_fan_out
 from transformers import get_linear_schedule_with_warmup,AdamW
 
 import datetime
@@ -258,8 +258,6 @@ class Appr(object):
             
             if isinstance(trainer_layer, BayesianLinear):
                 std_init = math.sqrt((2 / fan_in) * args.ratio)
-            if isinstance(trainer_layer, BayesianConv2D):
-                std_init = math.sqrt((2 / fan_out) * args.ratio)
             
             saver_weight_strength = (std_init / saver_weight_sigma)
 
