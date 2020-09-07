@@ -1,4 +1,4 @@
-# CSUR code for Continual Learning for Sentiment Classification with AdaptiveUncertainty Regularization
+# CSUR code for Continual Learning for Sentiment Classification with Adaptive Uncertainty Regularization
 
 ## you need to download the pretrain model named bert-base-uncased in https://github.com/huggingface/transformers, and set it into data/bert-base-uncased
 
