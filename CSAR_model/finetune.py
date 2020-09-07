@@ -1,5 +1,5 @@
 import sys
-# sys.path.append('UCL/')
+
 
 import torch
 import numpy as np
@@ -13,9 +13,9 @@ np.random.seed(seed)
 random.seed(seed)
 torch.backends.cudnn.deterministic = True
 
-from approaches import ucl
-from CSAR_model.model import BertClassifier,BertClassifier_bayes,BertClassifier_base,BertClassifier_UCL,BertClassifier_frezzbert,LSTMSentiment,CNN_Text
-from dataset import bert_train_loader,loader_with_GR
+from approaches import CSAR
+from CSAR_model.model import BertClassifier_base
+from dataset import bert_train_loader
 
 from transformers import get_linear_schedule_with_warmup,AdamW
 from transformers import BertForSequenceClassification
@@ -36,7 +36,7 @@ test_loader = []
 
 for n,task in enumerate(tasks):
     model = BertClassifier_base()    
-    train_dataloader,valid_dataloader,test_dataloader = bert_train_loader(tasks[n],tasks,0)
+    train_dataloader,valid_dataloader,test_dataloader = bert_train_loader(tasks[n])
     test_loader.append(test_dataloader)
     model.add_dataset(tasks[n],2)
     model.set_dataset(dataset = tasks[n])
@@ -57,6 +57,6 @@ for n,task in enumerate(tasks):
                                                 num_warmup_steps = 0, # Default value in run_glue.py
                                                 num_training_steps = total_steps)
     
-    ucl_train = ucl.Appr(model,epochs,batch_size,args = args,log_name=args.logname,task_names = tasks[n:n+1])
+    finetune_train = CSAR.Appr(model,epochs,batch_size,args = args,log_name=args.logname,task_names = tasks[n:n+1])
     print('train:'+tasks[n])
-    ucl_train.train(0,train_dataloader,valid_dataloader,test_loader,optimizer,scheduler,regular)
+    finetune_train.train(0,train_dataloader,valid_dataloader,test_loader,optimizer,scheduler,regular)

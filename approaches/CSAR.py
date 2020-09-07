@@ -257,7 +257,7 @@ class Appr(object):
             saver_weight_sigma = torch.log1p(torch.exp(saver_layer.weight_rho))
             
             if isinstance(trainer_layer, BayesianLinear):
-                std_init = math.sqrt((2 / fan_in) * args.ratio)
+                std_init = 0.1 * math.sqrt((2 / fan_in) * args.ratio)
             
             saver_weight_strength = (std_init / saver_weight_sigma)
 
