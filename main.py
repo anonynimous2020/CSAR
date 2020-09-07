@@ -1,5 +1,5 @@
 import sys
-# sys.path.append('CSAR/')
+# sys.path.append('CSUR/')
 
 import torch
 import numpy as np
@@ -13,8 +13,8 @@ np.random.seed(seed)
 random.seed(seed)
 torch.backends.cudnn.deterministic = True
 
-from approaches import CSAR
-from CSAR_model.model import BertClassifier_CSAR,BertClassifier_base
+from approaches import CSUR
+from CSUR_model.model import BertClassifier_CSUR,BertClassifier_base
 from dataset import bert_train_loader
 
 from transformers import get_linear_schedule_with_warmup,AdamW
@@ -30,8 +30,8 @@ batch_size = 16
 regular = False
 if args.approach == 'BERT':
     model = BertClassifier_base()
-elif args.approach == 'CSAR':
-    model = BertClassifier_CSAR()
+elif args.approach == 'CSUR':
+    model = BertClassifier_CSUR()
     regular = True
 
 print("trainning :"+args.approach)
@@ -47,7 +47,7 @@ tasks = ['magazines.task','apparel.task','health_personal_care.task','camera_pho
 if args.tasks_sequence ==2:
     tasks = ['health_personal_care.task', 'books.task', 'magazines.task', 'music.task', 'baby.task', 'software.task', 'camera_photo.task', 'sports_outdoors.task', 'kitchen_housewares.task', 'video.task', 'MR.task', 'apparel.task', 'imdb.task', 'dvd.task', 'electronics.task', 'toys_games.task']
 print(tasks)
-CSAR_train = CSAR.Appr(model,epochs,batch_size,args = args,log_name=args.logname,task_names = tasks)
+CSUR_train = CSUR.Appr(model,epochs,batch_size,args = args,log_name=args.logname,task_names = tasks)
 
 
 for t in range(0,16):
@@ -83,4 +83,4 @@ for t in range(0,16):
 
 
     print('training {}'.format(tasks[t]))
-    CSAR_train.train(t,train_dataloader,valid_dataloader,test_loader,optimizer,scheduler,regular)
+    CSUR_train.train(t,train_dataloader,valid_dataloader,test_loader,optimizer,scheduler,regular)

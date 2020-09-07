@@ -13,8 +13,8 @@ np.random.seed(seed)
 random.seed(seed)
 torch.backends.cudnn.deterministic = True
 
-from approaches import CSAR
-from CSAR_model.model import BertClassifier_base
+from approaches import CSUR
+from CSUR_model.model import BertClassifier_base
 from dataset import bert_train_loader
 
 from transformers import get_linear_schedule_with_warmup,AdamW
@@ -57,6 +57,6 @@ for n,task in enumerate(tasks):
                                                 num_warmup_steps = 0, # Default value in run_glue.py
                                                 num_training_steps = total_steps)
     
-    finetune_train = CSAR.Appr(model,epochs,batch_size,args = args,log_name=args.logname,task_names = tasks[n:n+1])
+    finetune_train = CSUR.Appr(model,epochs,batch_size,args = args,log_name=args.logname,task_names = tasks[n:n+1])
     print('train:'+tasks[n])
     finetune_train.train(0,train_dataloader,valid_dataloader,test_loader,optimizer,scheduler,regular)

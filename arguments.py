@@ -10,7 +10,7 @@ def get_args():
                         choices=['BERT',
                                  'PALS',
                                  'UCL',
-                                 'CSAR',
+                                 'CSUR',
                                  'FreezeBert',
                                  'LSTM',
                                  'CNN_Text'

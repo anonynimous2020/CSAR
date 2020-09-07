@@ -29,7 +29,7 @@ from torch.nn import CrossEntropyLoss, MSELoss
 
 from transformers.activations import gelu, gelu_new, swish
 import sys
-from CSAR_model.config_bert import BertConfig
+from CSUR_model.config_bert import BertConfig
 from transformers.file_utils import add_code_sample_docstrings, add_start_docstrings, add_start_docstrings_to_callable
 from transformers.modeling_utils import PreTrainedModel, find_pruneable_heads_and_indices, prune_linear_layer
 from bayes_layer import BayesianLinear

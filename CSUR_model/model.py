@@ -9,19 +9,19 @@ from torchvision import models
 
 from torch.nn import CrossEntropyLoss, MSELoss
 import sys
-from CSAR_model.networks import BertModel
+from CSUR_model.networks import BertModel
 from transformers import BertModel as pretrainmodel
 
-class BertClassifier_CSAR(nn.Module):
+class BertClassifier_CSUR(nn.Module):
     def __init__(self, make_model=True):
-        super(BertClassifier_CSAR, self).__init__()
+        super(BertClassifier_CSUR, self).__init__()
         if make_model:
             self.make_model()
 
 
     def make_model(self):
         """Creates the model."""
-        # Get the model from CSAR
+        # Get the model from CSUR
         self.bert = BertModel.from_pretrained(
             "data/bert-base-uncased", # Use the 12-layer BERT model, with an uncased vocab.
             num_labels = 2, # The number of output labels--2 for binary classification.
@@ -40,7 +40,7 @@ class BertClassifier_CSAR(nn.Module):
             output_hidden_states = False, # Whether the model returns all hidden-states.
             )
 
-        # Import the linear parameter in bet to baylinear of CSAR
+        # Import the linear parameter in bet to baylinear of CSUR
         model_dict = self.bert.state_dict()
         pretrain_dict = bert_pretrain.state_dict()
         state_dict = {}
