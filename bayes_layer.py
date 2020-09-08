@@ -40,7 +40,7 @@ class Gaussian(object):
     
     def sample(self):
         epsilon = self.normal.sample(self.mu.size()).cuda()
-        return self.mu + self.sigma * epsilon   
+        return self.mu + 0.1 * self.sigma * epsilon   
 
 class BayesianLinear(nn.Module):
     def __init__(self, in_features, out_features, ratio=0.5):
@@ -57,7 +57,7 @@ class BayesianLinear(nn.Module):
         noise_var = total_var * ratio
         mu_var = total_var - noise_var
         
-        noise_std, mu_std = 0.1 * math.sqrt(noise_var), math.sqrt(mu_var)
+        noise_std, mu_std = math.sqrt(noise_var), math.sqrt(mu_var)
         bound = math.sqrt(3.0) * mu_std
         rho_init = np.log(np.exp(noise_std)-1)
         
