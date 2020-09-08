@@ -78,7 +78,7 @@ class Appr(object):
             self.train_epoch(t, train_dataloader,regular)
             
             clock1 = time.time()
-            train_loss, train_acc = self.eval(t, train_dataloader)
+            train_loss, train_acc = self.eval(t, train_dataloader,regular)
             
             clock2 = time.time()
             print('| Epoch {:3d}, time={:5.1f}ms/{:5.1f}ms | Train: loss={:.3f}, acc={:5.1f}% |'.format(
@@ -86,7 +86,7 @@ class Appr(object):
                 1000 * self.sbatch * (clock2 - clock1) / num_batch, train_loss, 100 * train_acc), end='')
             # Valid
             
-            valid_loss, valid_acc = self.eval(t, test_dataloader)
+            valid_loss, valid_acc = self.eval(t, test_dataloader,regular)
             print(' Valid: loss={:.3f}, acc={:5.1f}% |'.format(valid_loss, 100 * valid_acc), end='')
 
         
@@ -106,7 +106,7 @@ class Appr(object):
         best_avg = 0
         for task in range(t+1):
             self.model.set_dataset(self.tasks[task])
-            valid_loss_t, valid_acc_t[task] = self.eval(task, data[task])
+            valid_loss_t, valid_acc_t[task] = self.eval(task, data[task],regular)
             best_avg += valid_acc_t[task]
             print('{} test: loss={:.3f}, acc={:5.1f}% |'.format(task,valid_loss_t, 100 * valid_acc_t[task]), end='')
             self.logger.add(epoch=(t * self.nepochs) + e+1, task_num=task + 1, test_loss=valid_loss_t,
@@ -147,12 +147,18 @@ class Appr(object):
             b_input_mask = batch[1].to(device)
             b_labels = batch[2].to(device)
             
-            self.model.zero_grad()       
-            outputs = self.model(b_input_ids, 
-                        token_type_ids=None, 
-                        attention_mask=b_input_mask, 
-                        labels=b_labels,
-                        sample = True)
+            self.model.zero_grad()
+            if regular:       
+                outputs = self.model(b_input_ids, 
+                            token_type_ids=None, 
+                            attention_mask=b_input_mask, 
+                            labels=b_labels,
+                            sample = True)
+            else:
+                outputs = self.model(b_input_ids, 
+                            token_type_ids=None, 
+                            attention_mask=b_input_mask, 
+                            labels=b_labels)
             # The call to `model` always returns a tuple, so we need to pull the 
             # loss value out of the tuple.
             loss = outputs[0]
@@ -192,13 +198,18 @@ class Appr(object):
             # Add batch to GPU
             batch = tuple(t.to(device) for t in batch)
             b_input_ids, b_input_mask, b_labels = batch
-            with torch.no_grad():        
-                outputs = self.model(b_input_ids, 
-                                token_type_ids=None, 
-                                attention_mask=b_input_mask,
-                                labels=b_labels,
-                                sample = False)
-            
+            with torch.no_grad():    
+                if regular:    
+                    outputs = self.model(b_input_ids, 
+                                    token_type_ids=None, 
+                                    attention_mask=b_input_mask,
+                                    labels=b_labels,
+                                    sample = False)
+                else:
+                    outputs = self.model(b_input_ids, 
+                                    token_type_ids=None, 
+                                    attention_mask=b_input_mask,
+                                    labels=b_labels)
             # Get the "logits" output by the model. The "logits" are the output
             # values prior to applying an activation function like the softmax.
             loss = outputs[0]
