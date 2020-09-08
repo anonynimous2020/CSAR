@@ -18,7 +18,8 @@ from torchvision.models.resnet import *
 from arguments import get_args
 args = get_args()
 
-
+resnet_model = models.resnet18(pretrained=True).cuda()
+feature_extractor = nn.Sequential(*list(resnet_model.children())[:-4])
 ########################################################################################################################
 
 def get_model(model):
