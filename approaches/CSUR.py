@@ -180,7 +180,7 @@ class Appr(object):
         return
 
 
-    def eval(self,t,test_dataloader):
+    def eval(self,t,test_dataloader,regular):
 
         t0 = time.time()
         device = 'cuda'
