@@ -4,18 +4,18 @@
 
 ### you can run CSUR model use:
 ```
-$ CUDA_VISIBLE_DEVICES=0 python main.py --approach CSUR --alpha 0.1 --beta 0.1 --gamma 0.03 --logname $SEED'_CSUR' --seed 1
+$ CUDA_VISIBLE_DEVICES=0 python main.py --approach CSUR --alpha 0.1 --beta 0.1 --gamma 0.03 --logname $SEED'_CSUR' --seed 2
 ```
 #### Don't worry about the following warning and we will load weights later: Some weights of the model checkpoint at data/bert-base-uncased were not used when initializing BertModel
 
 ### you can run BERT in continual learning:
 ```
-$ CUDA_VISIBLE_DEVICES=0 python main.py --approach BERT --alpha 0.1 --beta 0.1 --gamma 0.03 --logname $SEED'_BERT' --seed 1
+$ CUDA_VISIBLE_DEVICES=0 python main.py --approach BERT --alpha 0.1 --beta 0.1 --gamma 0.03 --logname $SEED'_BERT' --seed 2
 ```
 
 ### you can run BERT in Re-init:
 ```
-$ CUDA_VISIBLE_DEVICES=0 python finetune.py --approach BERT --alpha 0.1 --beta 0.1 --gamma 0.03 --logname $SEED'_BERT' --seed 1
+$ CUDA_VISIBLE_DEVICES=0 python finetune.py --approach BERT --alpha 0.1 --beta 0.1 --gamma 0.03 --logname $SEED'_BERT' --seed 2
 ```
 ------
 
